@@ -35,12 +35,15 @@ Después de estudiar los servicios publicados por el resto de compañerps, ésta
 No tienen la imagen del servicio publicado en Docker hub. <br> 
 Después se ha intentado la contrucción de su imagen de forma local, pero ha dado fallos de construcción.<br>
   Ante estos problemas se ha decidido simular el comportamiento del servicio usando spotlight/prism para el servidor y swagger-ui para el front-end.<br>
+  
 - Servicio 2 - Gestión de vehículos
 - **Servicio 3 - Gestión de trabajos**   `http://localhost:8003` <br>
   No tienen la imagen del servicio publicado en Docker hub. <br> Después se ha intentado seguir las instrucciones de contrucción de su imagen de forma local, como lo tienen documentado en su Readme.md, pero ha dado fallos de construcción.<br>
   Ante estos problemas se ha decidido simular el comportamiento del servicio usando spotlight/prism para el servidor y swagger-ui para el front-end.<br>
+  
 - Servicio 4 - Envío de notificaciones
 - **Servicio 5 - Gestión de facturas** `http://localhost:8005` <br>
-Se ha usado la propia imagen creada para el despliegue del servidor y para el front-end se ha usado swagger-ui.
+Se ha usado la propia imagen creada para el despliegue del servidor y para el front-end se ha usado swagger-ui. 
+
 - Servicio 6 - Gestión de recambios
 - Servicio 7 - Gestión de logs
