@@ -1,0 +1,83 @@
+version: "3"
+
+services:
+#SUBSISTEMA 1 
+ backend-clientes:
+    image: stoplight/prism:4
+    container_name: SIS_1-clientes_server
+    command: mock --cors -h 0.0.0.0 "/aos/clientes.yaml"
+    ports:
+      - 4012:4010
+    volumes:
+      - ./otherServices/subsistema_1:/aos:ro
+    networks:
+        - gestor_talleres
+ frontend-clientes:
+    image: swaggerapi/swagger-ui
+    container_name: SIS_1-clientes_front
+    ports:
+      - 8001:8080
+    environment:
+      SWAGGER_JSON: /aos/clientes.yaml
+    volumes:
+      - ./otherServices/subsistema_1:/aos:ro
+    networks:
+        - gestor_talleres
+
+#SUBSISTEMA 2
+
+#SUBSISTEMA 3
+ backend-trabajos:
+    image: stoplight/prism:4
+    container_name: SIS_3-trabajos_server
+    command: mock --cors -h 0.0.0.0 "/aos/swagger.yaml"
+    ports:
+      - 4011:4010
+    volumes:
+      - ./otherServices/subsistema_3:/aos:ro
+    networks:
+        - gestor_talleres
+ frontend-trabajos:
+    image: swaggerapi/swagger-ui
+    container_name: SIS_3-trabajos_front
+    ports:
+      - 8003:8080
+    environment:
+      SWAGGER_JSON: /aos/swagger.yaml
+    volumes:
+      - ./otherServices/subsistema_3:/aos:ro
+    networks:
+        - gestor_talleres
+
+#SUBSISTEMA 4
+
+
+
+
+#SUBSISTEMA 5
+ backend-facturas:
+    image: mwan93/aos_servicio_facturas:v0.2
+    container_name: SIS_4-facturas_server
+    ports:
+      - 4010:4010
+    networks:
+        - gestor_talleres
+ frontend-facturas:
+    image: swaggerapi/swagger-ui
+    container_name: SIS_4-facturas_front
+    ports:
+      - 8005:8080
+    environment:
+      SWAGGER_JSON: /aos/openapi.yaml
+    volumes:
+      - ./openapi:/aos:ro
+    networks:
+        - gestor_talleres
+
+#SUBSISTEMA 6
+
+#SUBSISTEMA 7
+
+
+networks:
+    gestor_talleres:

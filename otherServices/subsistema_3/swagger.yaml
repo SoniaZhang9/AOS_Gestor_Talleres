@@ -1,0 +1,436 @@
+openapi: 3.0.2
+
+info:
+  title: 'Subsistema_3 encargado de la gestión de la planificación diaria de trabajos del taller.'
+  version: 1.0.0
+  description: '*Gestion de los trabajos del taller*'
+  license:
+    name: "Apache 2.0"
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  contact:
+    name: "Grupo 1 AOS 21-22"
+    email: "soporte@tumecanico.com"
+
+servers:
+  - url: http://localhost/api/
+
+tags:
+  - name: '🔨 Trabajo'
+    description: Trabajo
+
+paths:
+  /trabajo:
+    get:
+      summary: Obtiene todos los Trabajos
+      description: |
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        
+        | Status Code | Descripción | Motivo                             |
+        | ------------| ------------| -----------------------------------|
+        | **200**     | OK          | Hay trabajos                       |
+        | **404**     | NOT FOUND   | No hay ningún trabajo              |
+      tags: [ '🔨 Trabajo' ]
+      operationId: trabajos_cget
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/orderParam'
+        - $ref: '#/components/parameters/orderingParam'
+      responses:
+        '200':
+          description: Lista de trabajos disponibles
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trabajos:
+                    description: trabajos de taller
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Trabajo'
+                  links:
+                    description: Enlaces de paginación
+                    readOnly: true
+                    type: object
+                    properties:
+                      prevPage:
+                        $ref: '#/components/schemas/Link'
+                      nextPage:
+                        $ref: '#/components/schemas/Link'
+        '404':
+          $ref: '#/components/responses/Response_404'
+          
+    post:
+      summary: Añade un nuevo trabajo
+      description: |
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        
+        | Status Code | Descripción          | Motivo                                    |
+        | ------------| ---------------------| ------------------------------------------|
+        | **201**     | CREATED              | El trabajo ha sido creado                 |
+        | **422**     | UNPROCESSABLE ENTITY | Falta alguno de los atributos obligatorios|
+      tags: [ '🔨 Trabajo' ]
+      operationId: trabajos_post
+      requestBody:
+        $ref: '#/components/requestBodies/trabajoRB'
+      responses:
+        '201':
+          description: Nuevo Trabajo creado
+          headers:
+            Location:
+              $ref: '#/components/headers/Location'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trabajo'
+              examples:
+                trabajoExample:
+                  $ref: '#/components/examples/trabajo-example'
+        '422':
+          $ref: '#/components/responses/Response_422'
+
+    options:
+      tags: [ '🔨 Trabajo' ]
+      summary: Proporciona la lista de los métodos HTTP soportados por esta ruta.
+      description: Devuelve una cabecera `Allow` con la lista de métodos HTTP soportados (separados por comas).
+      operationId: trabajos_options
+      responses:
+        '204':
+          description: 'Una peticion ha salido exitosa, pero el cliente no necesita salir de la página actual. Devuelve la cabecera `Allow`'
+          headers:
+            Allow:
+              $ref: '#/components/headers/Allow'
+
+  /trabajo/{trabajoId}:
+    parameters:
+      - $ref: '#/components/parameters/trabajoId'
+    get:
+      summary: Obtiene un trabajo identificado por su `trabajoId`
+      description: |        
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        
+        | Status Code      | Descripción | Motivo                             |
+        | ---------------- | ------------| -----------------------------------|
+        | **200**          | OK          | Si el trabajo existe               |
+        | **404**          | NOT FOUND   | Si el trabajo no existe            |
+      tags: [ '🔨 Trabajo' ]
+      operationId: trabajos_get
+      responses:
+        '200':
+          description: Trabajo
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trabajo'
+              examples:
+                trabajoExample:
+                  $ref: '#/components/examples/trabajo-example'
+        '404':
+          $ref: '#/components/responses/Response_404'
+
+    delete:
+      summary: Elimina un trabajo identificado por su `trabajoId`
+      description: |
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        
+        | Status Code      | Descripción | Motivo                                    |
+        | ---------------- | ------------| ------------------------------------------|
+        | **204**          | NO CONTENT  | El trabajo existía y ha sido eliminado    |
+        | **404**          | NOT FOUND   | Si el trabajo no existe                   |
+      tags: [ '🔨 Trabajo' ]
+      operationId: trabajos_delete
+      responses:
+        '204':
+          description: Trabajo eliminado 
+        '404':
+          $ref: '#/components/responses/Response_404'
+          
+    put:
+      tags: [ '🔨 Trabajo' ]
+      summary: Modifica un trabajo identificado por su 'trabajoId'.
+      description:  |
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        | Status Code | Descripción         | Motivo                                        |
+        | ------------| --------------------| ----------------------------------------------|
+        | **200**     | OK                  | El trabajo existía y ha sido modificado       |
+        | **404**     | NOT FOUND           | Si el trabajo no existe                       |
+        | **412**     | PRECONDITION FAILED | Si el ETag proporcionado no está actualizado  |
+      operationId: trabajos_put
+      parameters:
+        - $ref: '#/components/parameters/ifMatchParam'
+      requestBody:
+        $ref: '#/components/requestBodies/trabajoUpdate'
+      responses:
+        '200':
+          description: '`OK`: el trabajo ha sido modificado'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trabajo'
+        '404':
+          $ref: '#/components/responses/Response_404'
+        '412':
+          $ref: '#/components/responses/Response_412'
+
+    options:
+      tags: [ '🔨 Trabajo' ]
+      summary: Proporciona la lista de los métodos HTTP soportados por esta ruta.
+      description: Devuelve una cabecera `Allow` con la lista de métodos HTTP soportados (separados por comas).
+      operationId: trabajos_options
+      responses:
+        '204':
+          description: 'Una peticion ha salido exitosa, pero el cliente no necesita salir de la página actual. Devuelve la cabecera `Allow`'
+          headers:
+            Allow:
+              $ref: '#/components/headers/Allow'
+
+components:
+  schemas:
+    Trabajo:
+      $ref: './schemas/Trabajo.yaml'
+    HTTP_Problem:
+      $ref: './schemas/HTTP_Problem.yaml'
+    Link:
+      $ref: './schemas/Link.yaml'
+      
+  requestBodies:
+    trabajoRB:
+      description: Información de un trabajo
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [ nombre, descripcion, estado, VIN ]
+            properties:
+              VIN:
+                description: Número de identificación de 16 carácteres único del vehiculo gestionado por el subsistema_2
+                type: string
+                format: byte
+                pattern: "[A-Ha-hJ-Nj-nPpR-Tr-tV-Yv-y1-9]{1}[0-9]{6}"
+              nombre:
+                description: Nombre del trabajo
+                type: string
+                format: byte
+              descripcion:
+                description: Descripción del trabajo
+                type: string
+                format: byte
+              fechaInicio:
+                description: Indica la fecha de inicio del trabajo
+                type: string
+                format: date
+              estado:
+                description: Estado del trabajo de entre cuatro opciones
+                type: string
+                enum: [creado, planificado, iniciado, terminado]
+              matricula:
+                description: Número de matrícula del vehículo en el cual se va a realizar el trabajo
+                type: string
+                format: byte
+                pattern: "^[0-9]{1,4}(?!.*(LL|CH))[BCDFGHJKLMNPRSTVWXYZ]{3}"
+              urgente:
+                description: Dice si el trabajo es urgente
+                type: boolean
+                default: false
+          examples:
+            trabajoRB-example:
+              $ref: '#/components/examples/trabajoRB-example'
+              
+    trabajoUpdate:
+      description: Información de actualización de un trabajo
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              VIN:
+                description: Número de identificación de 16 carácteres único del vehiculo gestionado por el subsistema_2
+                type: string
+              nombre:
+                description: Nombre del trabajo
+                type: string
+              descripcion:
+                description: Descripción del trabajo
+                type: string
+              fechaInicio:
+                description: Indica la fecha de inicio del trabajo
+                type: string
+              estado:
+                description: Estado del trabajo de entre cuatro opciones
+                type: string
+                enum: [creado, planificado, iniciado, terminado]
+              matricula:
+                description: Número de matrícula del vehículo en el cual se va a realizar el trabajo
+                type: string
+              urgente:
+                description: Dice si el trabajo es urgente
+                type: boolean
+                default: false
+          examples:
+            trabajoUpdate-example:
+              $ref: '#/components/examples/trabajoRB-example'
+
+  headers:
+    ETag:
+      description: Entity Tag (identificador único proporcionado para validación de caché)
+      schema:
+        type: string
+        pattern: "[0-9a-f]*"
+        # https://github.com/marak/Faker.js#api-methods
+        x-faker: random.uuid
+        example:
+          33a64df551425fcc
+    Allow:
+      description: Lista de métodos HTTP soportados
+      schema:
+        type: string
+      example: GET,DELETE,PUT,OPTIONS,POST
+    Location:
+      description: '`URI` del nuevo recurso'
+      schema:
+        type: string
+        format: uri
+        x-faker: internet.url
+        example:
+          https://example.com/api/v1/Trabajo/1936
+
+  responses:
+    Response_404:
+      description: '`NOT FOUND`: recurso no disponible'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/HTTP_Problem'
+          examples:
+            response-http-404:
+              $ref: '#/components/examples/response-http-404'
+    Response_412:
+      description: '`PRECONDITION FAILED`: El ETag proporcionado no está actualizado'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/HTTP_Problem'
+          examples:
+            response-http-412:
+              $ref: '#/components/examples/response-http-412'
+    Response_422:
+      description: >
+        `UNPROCESSABLE ENTITY`
+        Falta alguno de los atributos obligatorios (`nombre`, `empresa`, `version` o `año_publicación`)
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/HTTP_Problem'
+          examples:
+            response-http-422:
+              $ref: '#/components/examples/response-http-422'
+
+  parameters:
+    trabajoId:
+      name: trabajoId
+      in: path
+      description: Identificador único del Trabajo
+      schema:
+        type: integer
+        format: int32
+      required: true
+    ifMatchParam:
+      name: If-Match
+      in: header
+      description: ETag del trabajo que se desea modificar
+      required: true
+      schema:
+        type: string
+        pattern: "[0-9a-f]*"
+    orderParam:
+      name: order
+      in: query
+      description: 'Criterio de ordenación: `id` | `nombre`'
+      required: false
+      allowEmptyValue: false
+      schema:
+        type: string
+        enum:
+          - id
+          - nombre
+    orderingParam:
+      name: ordering
+      in: query
+      description: 'Ordenación: `ASC` | `DESC`'
+      required: false
+      allowEmptyValue: false
+      schema:
+        type: string
+        enum:
+          - ASC
+          - DESC
+    pageParam:
+      name: page
+      in: query
+      description: 'Número de página'
+      required: false
+      allowEmptyValue: false
+      schema:
+        type: integer
+        minimum: 1
+
+  examples:
+    trabajo-example:
+      value:
+        trabajo:
+          id: 789
+          VIN: WAUZZZ7865723657
+          nombre: 'Cambio de aceite'
+          descripcion: 'Cambio de aceite'
+          fechaInicio: "15-04-2022"
+          estado: planificado
+          matricula: 5677JJYP
+          urgente: True
+          links:
+            parent:
+              href: https://example.com/api/v1/trabajo
+              rel: listaTrabajos
+            self:
+              href: https://example.com/api/v1/trabajo/2022
+              rel: obtenerTrabajo modificarTrabajo eliminarTrabajo
+
+    trabajoRB-example:
+      value:
+        VIN: PAUZZT7865678657
+        nombre: 'Revisión motor integral'
+        descripcion: 'Revision integral del motor como parte de la revisión del vehículo'
+        fechaInicio: "12-06-2022"
+        estado: planificado
+        matricula: 5678JJJJ
+        urgente: False
+
+    response-http-404:
+      value:
+        type: https://httpstatuses.com/404
+        title: NOT FOUND
+        status: 404
+        detail: El recurso solicitado no está disponible.
+        instance: about:blank
+
+    response-http-412:
+      value:
+        type: https://httpstatuses.com/412
+        title: PRECONDITION FAILED
+        status: 412
+        detail: El ETag proporcionado no está actualizado
+        instance: about:blank
+
+    response-http-422:
+      value:
+        type: https://httpstatuses.com/422
+        title: UNPROCESSABLE ENTITY
+        status: 422
+        detail: Falta alguno de los atributos obligatorios (nombre, descripcion, estado o VIN)
+        instance: about:blank
