@@ -5,7 +5,7 @@
 - Se ha decidido crear un servidor MOCK para dicho servicio, apoyándonos de una imagen base de stoplight/prism. Se puede encontrar más detalles en [Dockerfile](Dockerfile)
 
 - La imagen se encuentra publicada en <br>
-🐳 https://hub.docker.com/r/mwan93/aos_servicio_facturas/tags 🐳 <br>
+https://hub.docker.com/r/mwan93/aos_servicio_facturas/tags <br>
 La versión última v0.2 es la versión funcional 
 
 ### Intrucciones de uso:
