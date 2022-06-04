@@ -1,0 +1,53 @@
+Factura:
+  type: object
+  description: factura de todos los trabajos terminados, solicitados por un cliente
+  properties:
+      idFactura:
+        type: integer
+        format: int64
+        description: Id factura
+        readOnly: true
+      idCliente:
+        type: integer
+        format: int32
+        description: Id cliente
+        readOnly: true
+      fecha:
+        type: string
+        format: "date"
+      trabajos:
+        type: array
+        description: listado de trabajos
+        items:
+          $ref: './Link.yaml#/Link'
+      importe:
+        type: number
+        description: importe total
+        readOnly: true
+      links:
+        description: Enlaces de relación
+        type: object
+        properties:
+          parent:
+            $ref: './Link.yaml#/Link'
+          self:
+            $ref: './Link.yaml#/Link'
+  example:
+    idFactura: 7898
+    idCliente: 1333
+    fecha: "2022-10-01"
+    trabajos: 
+      - href: https://example.com/api/v1/trabajo/1111
+        rel: trabajo
+      - href: https://example.com/api/v1/trabajo/1112
+        rel: trabajo
+      - href: https://example.com/api/v1/trabajo/1113
+        rel: trabajo
+    importe: 300
+    links:
+      parent:
+        href: https://example.com/api/v1/factura
+        rel: lista de todas las facturas
+      self:
+        href: https://example.com/api/v1/factura/7898
+        rel: obtenerFactura modificarFactura eliminarFactura

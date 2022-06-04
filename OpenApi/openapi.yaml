@@ -1,0 +1,503 @@
+---
+openapi: 3.0.0
+
+info:
+  title: 'Subsistema 5: Gestión de facturas de un taller'
+  description: '[UPM] AOS - Grupo 94'
+  contact:
+    name: 'Sonia Zhang Chen'
+    url: https://github.com/SoniaZhang9
+    email: sonia.zhang@alumnos.upm.es
+  license:
+    name: MIT
+    url: 'https://opensource.org/licenses/MIT'
+  version: 1.0.0
+
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/SoniaZhang9/PracticaAOS-Subsistema-5/1.0.0
+  - url: http://127.0.0.1:80/api/v1
+
+tags:
+  - name: '🧾 Factura'
+    description: Facturas de los clientes por los trabajos realizados
+  - name: '🔍 Búsqueda facturas'
+    description: Búsqueda de facturas que cumplan unos parámetros específicos
+  - name: '✏ Factura concreta'
+    description: Operaciones sobre una factura concreta
+
+paths:
+  /factura:
+    get:
+      tags:
+        - '🧾 Factura'
+      summary: Obtiene todas las facturas del sistema
+      description: |
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        
+        | Status Code | Descripción | Motivo                             |
+        | ------------| ------------| -----------------------------------|
+        | **200**     | OK          | Hay facturas                       |
+        | **404**     | NOT FOUND   | No hay ninguna factura             |
+      operationId: grupo_94_AOS_cget
+      responses:
+        200:
+          description: Lista de facturas disponible
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                type: array
+                properties:
+                  facturas:
+                    description: array de facturas
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Factura'
+              examples:
+                facturasExamples:
+                  $ref: '#/components/examples/facturas'
+        404:
+          $ref: '#/components/responses/Response_404'
+    post:
+      tags:
+        - '🧾 Factura'
+      summary: Crea una nueva factura de un cliente cuando todos sus trabajos están terminados
+      description: |
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        
+        | Status Code | Descripción          | Motivo                                    |
+        | ------------| ---------------------| ------------------------------------------|
+        | **201**     | CREATED              | La factura ha sido creada                 |
+        | **422**     | UNPROCESSABLE ENTITY | Falta alguno de los atributos obligatorios (idCliente, trabajos)|
+      operationId: grupo_94_AOS_post
+      requestBody:
+        $ref: '#/components/requestBodies/facturaRB'
+      responses:
+        201:
+          description: factura creada
+          headers:
+            Location:
+              $ref: '#/components/headers/Location'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Factura'
+        422:
+          $ref: '#/components/responses/Response_422'
+
+    options:
+      tags:
+        - '🧾 Factura'
+      summary: Proporciona la lista de los métodos HTTP soportados por esta ruta.
+      description: Devuelve una cabecera `Allow` con la lista de métodos HTTP soportados (separados por comas).
+      operationId: grupo_94_AOS_coptions
+      responses:
+        '204':
+          description: 'cabecera `Allow` &lt;El cuerpo de la respuesta está vacío&gt;'
+          headers:
+            Allow:
+              $ref: '#/components/headers/Allow'
+
+  /factura/{idFactura}:
+    parameters:
+      - $ref: '#/components/parameters/idFactura'
+    get:
+      summary: Obtiene una factura identificado por su `idFactura`
+      description: |
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        
+        | Status Code      | Descripción | Motivo                             |
+        | ---------------- | ------------| -----------------------------------|
+        | **200**          | OK          | Si la factura existe                 |
+        | **404**          | NOT FOUND   | Si la factura no existe              |
+      tags:
+        - '✏ Factura concreta'
+      operationId: grupo_94_AOS_get
+      responses:
+        '200':
+          description: Factura
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Factura'
+        '404':
+          $ref: '#/components/responses/Response_404'
+    options:
+      tags:
+        - '✏ Factura concreta'
+      summary: Proporciona la lista de los métodos HTTP soportados por esta ruta.
+      description: Devuelve una cabecera `Allow` con la lista de métodos HTTP soportados (separados por comas).
+      operationId: grupo_94_AOS_options
+      responses:
+        '204':
+          description: 'cabecera `Allow` &lt;El cuerpo de la respuesta está vacío&gt;'
+          headers:
+            Allow:
+              $ref: '#/components/headers/Allow'
+    put:
+      tags:
+        - '✏ Factura concreta'
+      summary: Modifica una factura identificada por su `idFactura`, pasándole como parámetro una nueva lista de trabajos terminados
+      description:  |
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        | Status Code | Descripción         | Motivo                                    |
+        | ------------| --------------------| ------------------------------------------|
+        | **200**     | OK                  | La factura existía y ha sido modificada   |
+        | **404**     | NOT FOUND           | Si la factura no existe                   |
+      operationId: grupo_94_AOS_put
+      parameters:
+        # https://www.rfc-editor.org/rfc/rfc7232.html#page-13
+        - $ref: '#/components/parameters/ifMatchParam'
+      requestBody:
+        $ref: '#/components/requestBodies/facturaUpdate'
+      responses:
+        '200':
+          description: '`OK`: la factura ha sido actualizada'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Factura'
+        '404':
+          $ref: '#/components/responses/Response_404'
+    delete:
+      summary: Elimina una factura identificado por su `idFactura`
+      description: |
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        
+        | Status Code      | Descripción | Motivo                                    |
+        | ---------------- | ------------| ------------------------------------------|
+        | **204**          | NO CONTENT  | La factura existía y ha sido eliminado    |
+        | **404**          | NOT FOUND   | La factura no existe                      |
+      tags:
+        - '✏ Factura concreta'
+      operationId: grupo_94_AOS_delete
+      responses:
+        '204':
+          description: Factura eliminada &lt;Cuerpo de la respuesta vacío&gt;
+        '404':
+          $ref: '#/components/responses/Response_404'
+
+  /factura/findByIdCliente:
+    get:
+      tags:
+        - '🔍 Búsqueda facturas'
+      summary: Obtiene todas las facturas de un cliente
+      parameters:
+        - $ref: '#/components/parameters/idCliente'
+      description: |
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        
+        | Status Code | Descripción | Motivo                             |
+        | ------------| ------------| -----------------------------------|
+        | **200**     | OK          | Hay facturas del cliente solicitado|
+        | **404**     | NOT FOUND   | No hay ninguna factura             |
+      operationId: grupo_94_AOS_getByCliente
+      responses:
+        200:
+          description: Lista de facturas de un cliente
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  facturas:
+                    description: array de facturas
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Factura'
+
+        404:
+          $ref: '#/components/responses/Response_404'
+
+  /factura/findByRangoFechas:
+    get:
+      #Ej:/open/api/factura/findByRangoFechas?inicio=2022-10-11&final=2023-10-11'
+      tags:
+        - '🔍 Búsqueda facturas'
+      summary: Obtiene todas las facturas realizadas entre un rango de fechas
+      parameters:
+        - $ref: '#/components/parameters/fechaInicio'
+        - $ref: '#/components/parameters/fechaFin'
+      description: |
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        
+        | Status Code | Descripción | Motivo                             |
+        | ------------| ------------| -----------------------------------|
+        | **200**     | OK          | Hay facturas del cliente solicitado|
+        | **404**     | NOT FOUND   | No hay ninguna factura             |
+      operationId: grupo_94_AOS_getByRangoFechas
+      responses:
+        200:
+          description: Lista de facturas de un cliente
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  facturas:
+                    description: array de facturas
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Factura'
+
+        404:
+          $ref: '#/components/responses/Response_404'
+
+  /factura/findByRangoImportes:
+    get:
+      #Ej:/open/api/factura/findByRangoImportes?minimo=100&maximo=500'
+      tags:
+        - '🔍 Búsqueda facturas'
+      summary: Obtiene todas las facturas cuyo importe total se encuentre entre un rango minimo y maximo
+      parameters:
+        - $ref: '#/components/parameters/importeMinimo'
+        - $ref: '#/components/parameters/importeMaximo'
+      description: |
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        
+        | Status Code | Descripción | Motivo                             |
+        | ------------| ------------| -----------------------------------|
+        | **200**     | OK          | Hay facturas del cliente solicitado|
+        | **404**     | NOT FOUND   | No hay ninguna factura             |
+
+      operationId: grupo_94_AOS_getByRangoImportes
+      responses:
+        200:
+          description: Lista de facturas de un cliente
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  facturas:
+                    description: array de facturas
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Factura'
+
+        404:
+          $ref: '#/components/responses/Response_404'
+
+# Definición de componentes #
+components:
+  schemas:
+    Factura:
+      $ref: './schemas/Factura.yaml#/Factura'      
+    HTTP_Problem:
+      $ref: './schemas/HTTP_Problem.yaml#/HTTP_Problem'
+      
+  headers:
+    ETag:
+      description: Entity Tag (identificador único proporcionado para validación de caché)
+      schema:
+        type: string
+        pattern: "[0-9a-f]*"
+        # https://github.com/marak/Faker.js#api-methods
+        x-faker: random.uuid
+        example: 33a64df551425fcc
+    Allow:
+      description: Lista de métodos HTTP soportados
+      schema:
+        type: string
+        example: GET,DELETE,PUT,OPTIONS
+    Location:
+      description: '`URI` del nuevo recurso'
+      schema:
+        type: string
+        format: uri
+        x-faker: internet.url
+        example: https://example.com/api/v1/factura/1398
+        
+  parameters:
+    idFactura:
+      name: idFactura
+      in: path
+      description: Identificador único de factura
+      schema:
+        type: integer
+        format: int64
+      required: true
+    ifMatchParam:
+      name: If-Match
+      in: header
+      description: ETag del videojuego que se desea modificar
+      required: true
+      schema:
+        type: string
+        pattern: "[0-9a-f]*"
+    idCliente:
+      name: cliente
+      in: query
+      description: 'ID del cliente'
+      required: true
+      allowEmptyValue: false
+      schema:
+          type: integer
+          format: int32
+    fechaInicio:
+      name: inicio
+      in: query
+      description: 'fecha de inicio desde el cual se quiere buscar las facturas'
+      required: true
+      allowEmptyValue: false
+      schema:
+          type: string
+          format: "date"
+    fechaFin:
+      name: final
+      in: query
+      description: 'fecha final del rango de fechas'
+      required: true
+      allowEmptyValue: false
+      schema:
+          type: string
+          format: "date"
+    importeMinimo:
+      name: minimo
+      in: query
+      description: 'precio minimo de rango de importes'
+      required: true
+      allowEmptyValue: false
+      schema:
+          type: number
+    importeMaximo:
+      name: maximo
+      in: query
+      description: 'precio maximo de rango de importes'
+      required: true
+      allowEmptyValue: false
+      schema:
+          type: number
+      
+  requestBodies:
+    facturaRB:
+      description: 'Información de creación de una `Factura`'
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - idCliente
+              - trabajos
+            properties:
+              idCliente:
+                type: integer
+                format: int32
+                description: Id cliente
+              trabajos:
+                type: array
+                description: listado de trabajos
+                items:
+                  $ref: './schemas/Link.yaml#/Link'
+
+    facturaUpdate:
+      description: 'Información de actualización de una `Factura`'
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - trabajos
+            properties:
+              trabajos:
+                type: array
+                description: nueva lista de trabajos terminados, pudiendo contener tanto trabajos ya existentes en la factura como nuevas
+                items:
+                  $ref: './schemas/Link.yaml#/Link'
+
+  responses:        
+    Response_404:
+      description: '`NOT FOUND`: recurso no disponible'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/HTTP_Problem'
+          examples:
+            response-http-404:
+              $ref: '#/components/examples/response-http-404'
+    Response_422:
+      description: >
+        `UNPROCESSABLE ENTITY`
+        Falta alguno de los atributos obligatorios
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/HTTP_Problem'
+          examples:
+            response-http-422:
+              $ref: '#/components/examples/response-http-422'
+            
+  examples: 
+    facturas: 
+      value:
+        - idFactura: 7898
+          idCliente: 1333
+          fecha: "2022-10-01"
+          trabajos: 
+            - href: https://example.com/api/v1/trabajo/1111
+              rel: trabajo
+            - href: https://example.com/api/v1/trabajo/1112
+              rel: trabajo
+            - href: https://example.com/api/v1/trabajo/1113
+              rel: trabajo
+          importe: 300
+          links:
+            parent:
+              href: api/v1/factura
+              rel: lista de todas las facturas
+            self:
+              href: api/v1/factura/7898
+              rel: obtenerFactura modificarFactura eliminarFactura
+        - idFactura: 7
+          idCliente: 444
+          fecha: "2022-05-01"
+          trabajos: 
+            - href: https://example.com/api/v1/trabajo/1131
+              rel: trabajo
+            - href: https://example.com/api/v1/trabajo/1132
+              rel: trabajo
+            - href: https://example.com/api/v1/trabajo/1133
+              rel: trabajo
+          importe: 150
+          links:
+            parent:
+              href: api/v1/factura
+              rel: lista de todas las facturas
+            self:
+              href: api/v1/factura/7
+              rel: obtenerFactura modificarFactura eliminarFactura
+          
+    response-http-404:
+      value:
+        type: https://httpstatuses.com/404
+        title: NOT FOUND
+        status: 404
+        detail: El recurso solicitado no está disponible.
+        instance: about:blank
+
+    response-http-422:
+      value:
+        type: https://httpstatuses.com/422
+        title: UNPROCESSABLE ENTITY
+        status: 422
+        detail: Falta alguno de los atributos obligatorios (idCliente, trabajos)
+        instance: about:blank
+
