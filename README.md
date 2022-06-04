@@ -18,7 +18,7 @@ Creación de un contenedor con
 docker run -it -p 4010:4010 --name servicioFacturas mwan93/aos_servicio_facturas:v0.2
 ```
 
-- En caso de querer construir la imagen localmente, habría que descargar el contenido de este repositorio, situarse sobre la raíz y escribir lo siguiente:<br> 
+- En caso de querer construir la imagen y levantar un contenedor localmente, habría que descargar el contenido de este repositorio, situarse sobre la raíz y escribir lo siguiente:<br> 
 ```
 docker image build -t facturas:v0.2 .
 ```
