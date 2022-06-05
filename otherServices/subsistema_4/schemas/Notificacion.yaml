@@ -1,0 +1,45 @@
+Notificacion:
+      type: object
+      description: Notificacion creada
+      required:
+        - tipo
+        - clienteId
+        - vehiculo
+      properties:
+          notificacionId:
+            description: Id de la notificacion
+            type: integer
+            format: int32
+            readOnly: true
+          clienteId:
+             description: Id del cliente
+             type: integer
+             format: int32
+             readOnly: true
+          vehiculo:
+            description: VIN del vehículo
+            type: string
+            minLength: 11
+            maxLength: 11
+            readOnly: true
+          tipo:
+            $ref: './Tipo.yaml#/Tipo'
+          descripcion:
+            description: Descripción de la notificación
+            type: string
+          
+          links:
+              notificacionesCliente:
+                  href: /api/v1/notificacion?clienteId={clienteId}
+                  rel: notificacionesClientes
+      example:
+          notificacionId: 47
+          clienteId: 23
+          vehiculo: 1HGBH41JXMN109186
+          tipo: Llegada
+          descripcion: Tu vehículo acaba de ser recibido en el taller.
+          
+          links:
+              notificacionesCliente:
+                  href: /api/v1/notificacion?clienteId=23
+                  rel: notificacionesClientes

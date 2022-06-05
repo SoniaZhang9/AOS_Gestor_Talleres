@@ -1,0 +1,35 @@
+description: Modelo con los atributos de un log
+type: object
+properties:
+  id:
+    type: integer
+    minimum: 1
+    maximum: 99999
+  fecha:
+    type: string
+    minLength: 1
+    format: date
+  mensaje:
+    type: string
+    minLength: 1
+  prioridad:
+    type: string
+    minLength: 0
+    enum:
+      - Alta
+      - Baja
+  usuario:
+    type: string
+    minLength: 1
+    format: idn-email
+  subsistema:
+    type: integer
+    minimum: 1
+    maximum: 7
+required:
+  - id
+  - fecha
+  - mensaje
+  - prioridad
+  - usuario
+examples: []

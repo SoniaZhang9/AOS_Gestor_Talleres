@@ -1,0 +1,13 @@
+Tipo:
+      description: Conjunto de todos los tipos de notificaciones posibles.
+      type: string
+      nullable: false
+      enum:
+      - Llegada
+      - Comienzo de Evaluación
+      - Comienzo de Reparación
+      - Imprevisto detectado
+      - Reparación finalizada
+      - Envío de factura
+      - Otro
+      - Salida

@@ -25,6 +25,27 @@ services:
         - gestor_talleres
 
 #SUBSISTEMA 2
+ backend-vehiculos:
+    image: stoplight/prism:4
+    container_name: SIS_2-vehiculos_server
+    command: mock --cors -h 0.0.0.0 "/aos/openapi.yaml"
+    ports:
+      - 4013:4010
+    volumes:
+      - ./otherServices/subsistema_2:/aos:ro
+    networks:
+        - gestor_talleres
+ frontend-vehiculos:
+    image: swaggerapi/swagger-ui
+    container_name: SIS_2-vehiculos_front
+    ports:
+      - 8002:8080
+    environment:
+      SWAGGER_JSON: /aos/openapi.yaml
+    volumes:
+      - ./otherServices/subsistema_2:/aos:ro
+    networks:
+        - gestor_talleres
 
 #SUBSISTEMA 3
  backend-trabajos:
@@ -50,9 +71,27 @@ services:
         - gestor_talleres
 
 #SUBSISTEMA 4
-
-
-
+ backend-notificaciones:
+    image: stoplight/prism:4
+    container_name: SIS_4-notificaciones_server
+    command: mock --cors -h 0.0.0.0 "/aos/swagger.yaml"
+    ports:
+      - 4014:4010
+    volumes:
+      - ./otherServices/subsistema_4:/aos:ro
+    networks:
+        - gestor_talleres
+ frontend-notificaciones:
+    image: swaggerapi/swagger-ui
+    container_name: SIS_4-notificaciones_front
+    ports:
+      - 8004:8080
+    environment:
+      SWAGGER_JSON: /aos/swagger.yaml
+    volumes:
+      - ./otherServices/subsistema_4:/aos:ro
+    networks:
+        - gestor_talleres
 
 #SUBSISTEMA 5
  backend-facturas:
@@ -75,9 +114,25 @@ services:
         - gestor_talleres
 
 #SUBSISTEMA 6
+ servicio-recambios:
+    image: ghcr.io/adrianja5/aos-implementacion-servicio-recambios:latest
+    container_name: SIS_6-recambios
+    ports:
+      - 8006:8080
+    networks:
+        - gestor_talleres
 
 #SUBSISTEMA 7
-
+ backend-logs:
+    image: stoplight/prism:4
+    container_name: SIS_7-logs_server
+    command: mock --cors -h 0.0.0.0 "/aos/openapi.yaml"
+    ports:
+      - 8007:4010
+    volumes:
+      - ./otherServices/subsistema_7:/aos:ro
+    networks:
+        - gestor_talleres
 
 networks:
     gestor_talleres:
