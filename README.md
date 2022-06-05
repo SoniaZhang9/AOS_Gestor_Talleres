@@ -56,3 +56,19 @@ Se ha usado la imagen que tiene publicada
 No hay imagen del servicio. Ante esto, se ha decidido simular su comportamiento usando spotlight/prism para el servidor<br>
 
 #### Para desplegar, escribir `docker-compose up` sobre la raíz de este repositorio
+
+
+## Despliegue de todos los servicios con Kubernetes
+Para el despliegue en kubernetes necesitamos las imagenes de los servicios publicadas en Docker hub. Después del estudio del apartado anterior, sólo se ha encontrado 2 imagenes de servicios funcionales, así, solo se usarán esas imagenes para la configuración de los pods y servicios de kubernetes.
+El fichero para el despliegue se encuentra implementado en [gestor-taller-kubernetes](gestor-taller-kubernetes.yaml)
+
+- Para desplegar 
+```
+kubectl apply -f gestor-taller-kubernetes.yaml
+```
+- Para desplegar servicios concretos
+```
+minikube service recambios-service 
+```
+La instrucción anterior es un ejemplo. Sustituir `recambios-service` por el nombre del servicio deseados.
+Una vez aquí, se abrirá automaticamente una ventana de navegador con el endpoint del servicio.
