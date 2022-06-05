@@ -68,7 +68,7 @@ kubectl apply -f gestor-taller-kubernetes.yaml
 ```
 - Para desplegar servicios concretos
 ```
-minikube service recambios-service 
+minikube service <nombreServicio>
 ```
-La instrucción anterior es un ejemplo. Sustituir `recambios-service` por el nombre del servicio deseados.
-Una vez aquí, se abrirá automaticamente una ventana de navegador con el endpoint del servicio.
+Para ver el listado de servicios, escribir `kubectl get services`. Copiar el nombre del servicio deseado y sustiturlo en la instrucción de arriba.
+Una vez ejecutado la instrucción, se abrirá automaticamente una ventana de navegador con el endpoint del servicio.
