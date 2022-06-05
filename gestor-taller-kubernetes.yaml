@@ -1,0 +1,81 @@
+# DEPLOYMENTS
+
+#Subsistema 5 - Gestión de facturas 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: facturas-deployment
+  labels:
+    app: facturas
+spec:
+  selector:
+    matchLabels:
+      app: facturas
+  replicas: 1 
+  template:
+    metadata:
+      labels:
+        app: facturas
+    spec:
+      containers:
+        - name: facturas
+          image: mwan93/aos_servicio_facturas:v0.2
+          ports:
+            - containerPort: 8080
+
+
+#Subsistema 6 - Gestión de recambios 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recambios-deployment
+  labels:
+    app: recambios
+spec:
+  selector:
+    matchLabels:
+      app: recambios
+  replicas: 1 
+  template:
+    metadata:
+      labels:
+        app: recambios
+    spec:
+      containers:
+        - name: recambios
+          image: ghcr.io/adrianja5/aos-implementacion-servicio-recambios:latest
+          ports:
+            - containerPort: 8080
+
+# SERVICES
+
+#Subsistema 5 - Gestión de facturas 
+apiVersion: v1
+kind: Service
+metadata:
+  name: facturas-service
+spec:
+  selector:
+    app: facturas
+  type: LoadBalancer
+  ports:
+    - port: 8005
+      targetPort: 8080
+      nodePort: 30001
+
+#Subsistema 6 - Gestión de recambios 
+apiVersion: v1
+kind: Service
+metadata:
+  name: recambios-service
+spec:
+  selector:
+    app: recambios
+  type: LoadBalancer
+  ports:
+    - port: 8005
+      targetPort: 8080
+      nodePort: 30000
+
+
+
