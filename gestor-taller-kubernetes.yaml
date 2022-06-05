@@ -21,8 +21,9 @@ spec:
         - name: facturas
           image: mwan93/aos_servicio_facturas:v0.2
           ports:
-            - containerPort: 8080
+            - containerPort: 4010
 
+---
 
 #Subsistema 6 - Gestión de recambios 
 apiVersion: apps/v1
@@ -47,6 +48,8 @@ spec:
           ports:
             - containerPort: 8080
 
+---
+
 # SERVICES
 
 #Subsistema 5 - Gestión de facturas 
@@ -63,6 +66,8 @@ spec:
       targetPort: 8080
       nodePort: 30001
 
+---
+
 #Subsistema 6 - Gestión de recambios 
 apiVersion: v1
 kind: Service
@@ -76,6 +81,3 @@ spec:
     - port: 8005
       targetPort: 8080
       nodePort: 30000
-
-
-
