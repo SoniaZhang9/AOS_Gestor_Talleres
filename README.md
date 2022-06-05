@@ -54,3 +54,5 @@ Se ha usado la imagen que tiene publicada
 
 - **Servicio 7 - Gestión de logs** `http://localhost:8007/logs` <br>
 No hay imagen del servicio. Ante esto, se ha decidido simular su comportamiento usando spotlight/prism para el servidor<br>
+
+Para desplegar, escribir `docker-compose up` sobre la raíz de este repositorio
