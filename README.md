@@ -47,7 +47,7 @@ Se ha creado un contenedor a partir de la imagen de tienen publicada en Docker h
 Se ha descargado la imagen de tienen publicado del servicio pero a falta de documentación, no se ha podido desplegar el contenedor debido a que no se sabe qué puerto tienen expuesto. Ante esto, se ha seguido el mismo plan pensado para el resto de servicios, simular su comportamiento.
 
 - **Servicio 5 - Gestión de facturas** `http://localhost:8005` <br>
-Se ha usado la propia imagen creada para el despliegue del servidor y para el front-end se ha usado swagger-ui. 
+Se ha usado la imagen creada para esta práctica, que se ha mencionado al inicio de este documento.Y para el front-end se ha usado swagger-ui. 
 
 - **Servicio 6 - Gestión de recambios** `http://localhost:8006/api/v1` <br>
 Se ha usado la imagen que tiene publicada
